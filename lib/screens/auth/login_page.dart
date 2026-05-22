@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:shophive/screens/auth/signup_screen.dart';
+import 'package:shophive/screens/auth/forgot_password_screen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -29,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 const SizedBox(height: 24),
                 const Text(
-                  'Welcome Back!',
+                  'Welcome!',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 28,
@@ -149,6 +150,11 @@ class _LoginPageState extends State<LoginPage> {
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
                     onTap: () {
+                      Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ForgotPasswordScreen(),
+                      ),
+                      );
                       // Navigate to forgot password screen
                     },
                     child: const Text(

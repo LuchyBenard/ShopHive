@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shophive/utils/popup_helper.dart';
+import 'login_page.dart';
 
 class SignupScreen extends StatefulWidget {
   SignupScreen({super.key});
@@ -9,8 +11,15 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _passwordController = TextEditingController();
   bool _obscurePassword = true;      // ← tracks password visibility
-  bool _obscureConfirmPassword = true; // ← tracks confirm password visibility
+  bool _obscureConfirmPassword = true;
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    super.dispose();
+  }// ← tracks confirm password visibility
 
   @override
   Widget build(BuildContext context) {
@@ -253,7 +262,8 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 // password field
                 TextFormField(
-                  obscureText: true,
+                  controller: _passwordController,
+                  obscureText: _obscurePassword,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
@@ -271,7 +281,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     hintText: 'Enter your password',
                     prefixIcon: const Icon(
-                      Icons.lock_outlined,
+                      Icons.lock_outline,
                       color: deepBrown,
                     ),
                     suffixIcon: IconButton(        // ← IconButton not just Icon
@@ -293,7 +303,76 @@ class _SignupScreenState extends State<SignupScreen> {
                       return 'Please enter your Password';
                     }
                     if (value.length < 8) {
+                      PopupHelper.showErrorSnackBar(
+                          context,
+                          'Password must be at least 8 characters'
+                      );
                       return 'Password must be at least 8 characters';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 15),
+
+                // Confirm Password Label
+
+                Text(
+                  'Confirm Password',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: deepBrown,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                // Confirm Password Field
+                TextFormField(
+                  obscureText: _obscureConfirmPassword,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    hintText: 'Confirm your password',
+                    prefixIcon: const Icon(
+                      Icons.lock_outline,
+                      color: deepBrown,
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureConfirmPassword
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscureConfirmPassword = !_obscureConfirmPassword;
+                        });
+                      },
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Colors.red),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Colors.red),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please confirm your password';
+                    }
+                    if (value != _passwordController.text) {
+                      PopupHelper.showErrorSnackBar(
+                        context,
+                        'Passwords do not match',
+                      );
+                      return 'Passwords do not match';
                     }
                     return null;
                   },
@@ -302,31 +381,72 @@ class _SignupScreenState extends State<SignupScreen> {
                 const SizedBox(height: 24),
 
                 // Sign up Button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        // Navigate to the welcome back screen
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: deepBrown,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      'Sign Up',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+            // Sign up Button
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    // FIXED: Added missing commas and properly closed the function blocks
+                    PopupHelper.showSuccessDialog(
+                      context,
+                      'Registration Successful',
+                      'Your account has been created successfully. Welcome to ShopHive',
+                          () {
+                        // Navigate to the login screen
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginPage(),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: deepBrown,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  'Sign Up',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+
+                SizedBox(height: 22),
+
+                // Already have an account?
+                Center(
+                  child: GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: RichText(
+                      text: const TextSpan(
+                        text: 'Already have an account? ',
+                        style: TextStyle(color: Colors.grey),
+                        children: [
+                          TextSpan(
+                            text: 'Login here',
+                            style: TextStyle(
+                              color: deepBrown,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
+                const SizedBox(height: 32),
+
               ],
             ),
           ),
