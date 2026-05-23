@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:shophive/screens/auth/signup_screen.dart';
 import 'package:shophive/screens/auth/forgot_password_screen.dart';
+import 'package:shophive/screens/bottom_nav/bottom_nav_bar.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

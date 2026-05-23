@@ -27,7 +27,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        onTap: () {
+        onTap: (index) {
           setState(() {
             _currentIndex = index;
           });
@@ -35,7 +35,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white,
-        selectedItemColor: deepBrown,
+        selectedItemColor: Color(0xFF3E1C00),
         unselectedItemColor: Colors.grey,
         selectedLabelStyle: TextStyle(
           fontWeight: FontWeight.w600,
@@ -61,7 +61,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             label: 'Cart',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outlined),
+            icon: Icon(Icons.person_outline),
             activeIcon: Icon(Icons.person),
             label: 'Profile',
           ),

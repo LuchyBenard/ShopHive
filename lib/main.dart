@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shophive/providers/auth_provider.dart';
 import 'package:shophive/providers/product_provider.dart';
-import 'package:shophive/screens/bottom_nav_bar.dart';
+import 'package:shophive/screens/bottom_nav/bottom_nav_bar.dart';
 import 'package:shophive/screens/splash_screen.dart';
 
 void main() {
