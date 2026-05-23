@@ -173,6 +173,11 @@ class _LoginPageState extends State<LoginPage> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => BottomNavBar()),
+                            (route) => false,
+                        );
                         // Navigate to the home screen
                       }
                     },

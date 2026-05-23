@@ -137,7 +137,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                               content: const Text(
                                 'A password reset link has been sent to your email. Please check your inbox.',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.grey),
+                                style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 14),
                               ),
                               actions: [
                                 SizedBox(
