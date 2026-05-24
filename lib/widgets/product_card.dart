@@ -28,26 +28,35 @@ class ProductCard extends StatelessWidget {
           children: [
 
             // ── Image Area ──
-            Stack(
+            Stack(                           // ← Stack wraps image + badges
               children: [
-                Container(
-                  height: 130,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16),
-                    ),
+
+                // Product image
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
                   ),
-                  child: const Icon(
-                    Icons.image_outlined,
-                    size: 48,
-                    color: Colors.grey,
+                  child: Image.asset(
+                    product.image,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: 160,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        height: 160,
+                        color: Colors.grey.shade200,
+                        child: const Icon(
+                          Icons.shopping_bag_outlined,
+                          size: 48,
+                          color: Colors.grey,
+                        ),
+                      );
+                    },
                   ),
                 ),
 
-                // SALE badge
+                // SALE badge top left
                 Positioned(
                   top: 8,
                   left: 8,
@@ -70,7 +79,8 @@ class ProductCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Favourite icon
+
+                // Favourite icon top right
                 Positioned(
                   top: 8,
                   right: 8,
@@ -87,6 +97,7 @@ class ProductCard extends StatelessWidget {
                     ),
                   ),
                 ),
+
               ],
             ),
 
@@ -136,9 +147,11 @@ class ProductCard extends StatelessWidget {
                       ),
                     ],
                   ),
+
                 ],
               ),
             ),
+
           ],
         ),
       ),

@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shophive/providers/product_provider.dart';
-import 'package:shophive/widgets/category_chip.dart';
 import 'package:shophive/widgets/product_card.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {       // ← changed to StatefulWidget
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String _selectedCategory = 'All';            // ← tracks active chip
 
   @override
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProductProvider>(context);
     const deepBrown = Color(0xFF3E1C00);
     const amber = Color(0xFFF4A300);
+
+    // filters products based on selected category
+    final displayProducts = _selectedCategory == 'All'
+        ? productProvider.products
+        : productProvider.getByCategory(_selectedCategory);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -21,8 +32,8 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              // TOP BAR
 
+              // TOP BAR
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -30,13 +41,25 @@ class HomeScreen extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    // Menu icon
-                    const Icon(
-                      Icons.menu,
-                      color: deepBrown,
+
+                    //  Menu icon now clickable
+                    GestureDetector(
+                      onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Menu coming soon!'),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      },
+                      child: const Icon(
+                        Icons.menu,
+                        color: deepBrown,
+                      ),
                     ),
+
                     const Spacer(),
-                    // ShopHive title
+
                     const Text(
                       'ShopHive',
                       style: TextStyle(
@@ -45,38 +68,52 @@ class HomeScreen extends StatelessWidget {
                         color: deepBrown,
                       ),
                     ),
+
                     const Spacer(),
-                    // Shopping bag with red dot
-                    Stack(
-                      children: [
-                        const Icon(
-                          Icons.shopping_bag_outlined,
-                          color: deepBrown,
-                          size: 28,
-                        ),
-                        Positioned(
-                          right: 0,
-                          top: 0,
-                          child: Container(
-                            width: 10,
-                            height: 10,
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white,
-                                width: 2,
+
+                    // Shopping bag now clickable
+                    GestureDetector(
+                      onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Cart coming soon!'),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      },
+                      child: Stack(
+                        children: [
+                          const Icon(
+                            Icons.shopping_bag_outlined,
+                            color: deepBrown,
+                            size: 28,
+                          ),
+                          Positioned(
+                            right: 0,
+                            top: 0,
+                            child: Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
+
                   ],
                 ),
               ),
 
-              //  SEARCH BAR
+
+              // SEARCH BAR
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -114,7 +151,6 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-
 
               // FLASH SALE BANNER
 
@@ -158,7 +194,6 @@ class HomeScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
 
-                            // FLASH SALE badge
                             Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 8,
@@ -179,7 +214,6 @@ class HomeScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 8),
 
-                            // Main headline
                             const Text(
                               'Up to 50% Off',
                               style: TextStyle(
@@ -190,7 +224,6 @@ class HomeScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 4),
 
-                            // Sub headline
                             const Text(
                               'Selected fashion & beauty',
                               style: TextStyle(
@@ -201,7 +234,6 @@ class HomeScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 12),
 
-                            // Shop Now button
                             ElevatedButton(
                               onPressed: () {},
                               style: ElevatedButton.styleFrom(
@@ -259,7 +291,7 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 20),
 
 
-              // CATEGORIES SECTION
+              // CATEGORIES ← Fix 3
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -290,45 +322,57 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
 
-              // Horizontal category chips
+              // ← Fix 3: Clickable category chips
               SizedBox(
                 height: 36,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  children: const [
-                    CategoryChip(
-                      label: 'Fashion',
-                      isSelected: true,
-                      activeColor: amber,
-                    ),
-                    CategoryChip(
-                      label: 'Beauty',
-                      isSelected: false,
-                      activeColor: amber,
-                    ),
-                    CategoryChip(
-                      label: 'Accessories',
-                      isSelected: false,
-                      activeColor: amber,
-                    ),
-                    CategoryChip(
-                      label: 'Electronics',
-                      isSelected: false,
-                      activeColor: amber,
-                    ),
-                    CategoryChip(
-                      label: 'Gadgets',
-                      isSelected: false,
-                      activeColor: amber,
-                    ),
-                  ],
+                  children: [
+                    'All',
+                    'Fashion',
+                    'Beauty',
+                    'Electronics',
+                    'Gadgets',
+                  ].map((category) {
+                    final isSelected = _selectedCategory == category;
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedCategory = category;
+                        });
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? amber
+                              : Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          category,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: isSelected
+                                ? Colors.white
+                                : Colors.black54,
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
                 ),
               ),
               const SizedBox(height: 20),
 
 
-              //RECOMMENDED FOR YOU
+              // RECOMMENDED FOR YOU ← Fix 2
 
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
@@ -343,18 +387,23 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
 
-              // Horizontal product cards
-              SizedBox(
-                height: 240,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: productProvider.products.length,
-                  itemBuilder: (context, index) {
-                    final product = productProvider.products[index];
-                    return ProductCard(product: product); // ← uses widget
-                  },
+              // ← Fix 2: Vertical grid instead of horizontal list
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                gridDelegate:
+                const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  childAspectRatio: 0.72,
                 ),
+                itemCount: displayProducts.length,
+                itemBuilder: (context, index) {
+                  final product = displayProducts[index];
+                  return ProductCard(product: product);
+                },
               ),
               const SizedBox(height: 24),
 

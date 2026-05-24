@@ -56,7 +56,7 @@ class ProductProvider extends ChangeNotifier{
     ProductModel(
       id: '7',
       name: 'Tinted pink lipgloss',
-      image: 'assets/images/',
+      image: 'assets/images/lipgloss.jpg',
       price: 10,
       description: '',
       category: 'Beauty',
