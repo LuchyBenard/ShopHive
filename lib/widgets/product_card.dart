@@ -14,6 +14,12 @@ class ProductCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // TODO: Navigate to product details screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductDetailScreen(product: product),
+          ),
+        );
       },
       child: Container(
         width: 160,
@@ -41,10 +47,10 @@ class ProductCard extends StatelessWidget {
                     product.image,
                     fit: BoxFit.cover,
                     width: double.infinity,
-                    height: 160,
+                    height: 180,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
-                        height: 160,
+                        height: 180,
                         color: Colors.grey.shade200,
                         child: const Icon(
                           Icons.shopping_bag_outlined,

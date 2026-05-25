@@ -50,7 +50,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   'Create Account',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 25,
+                    fontSize: 28,
                     color: deepBrown,
                   ),
                 ),
@@ -60,7 +60,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 const Text(
                   'Sign up to start shopping',
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 18,
                     color: Colors.black,
                     fontWeight: FontWeight.w500,
                   ),
@@ -421,32 +421,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
             ),
-
-                SizedBox(height: 22),
-
-                // Already have an account?
-                Center(
-                  child: GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: RichText(
-                      text: const TextSpan(
-                        text: 'Already have an account? ',
-                        style: TextStyle(color: Colors.grey),
-                        children: [
-                          TextSpan(
-                            text: 'Login here',
-                            style: TextStyle(
-                              color: deepBrown,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 32),
-
               ],
             ),
           ),

@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  'Login to continue Shopping',
+                  'Log in for a smoother experience. Your details are secure',
                   style: TextStyle(
                     fontSize: 15,
                     color: Colors.black,

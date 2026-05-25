@@ -174,33 +174,6 @@ class ForgotPasswordScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-
-                const SizedBox(height: 24),
-
-                // Remember password? Login link
-                Center(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: RichText(
-                      text: const TextSpan(
-                        text: "Remember password? ",
-                        style: TextStyle(color: Colors.grey),
-                        children: [
-                          TextSpan(
-                            text: 'Login',
-                            style: TextStyle(
-                              color: deepBrown,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 32),
               ],
             ),
           ),

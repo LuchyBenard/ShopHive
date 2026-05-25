@@ -21,6 +21,8 @@ class _SearchScreenState extends State<SearchScreen> {
     'Beauty',
     'Gadgets',
     'Accessories',
+    'Books'
+    'Utensils'
   ];
 
   @override
@@ -57,12 +59,173 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               child: Row(
                 children: [
+                  // Search field
+                  Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: TextField(
+                          controller: _searchController,
+                          autofocus: false,
+                          onChanged: () {
+                            // Update search in provider
+                            productProvider.updateSearchQuery(value);
+                            setState(() {});
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Search products...',
+                              hintStyle: TextStyle(
+                                color: Colors.grey.shade500,
+                                fontSize: 14,
+                              ),
+                            prefixIcon: Icon(
+                              Icons.search,
+                              color: Colors.grey.shade500,
+                            ),
+                            // show a clearer button when users type
+                            suffixIcon: _searchController.text.isNotEmpty? IconButton(
+                              icon: Icon(
+                                Icons.close,
+                                color: Colors.grey,
+                              ),
+                              onPressed: () {
+                                _searchController.clear();
+                                productProvider.updateSearchQuery('');
+                                setState(() {});
+                              },
+                            )
+                                : null,
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 14,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ),
                   ],
               ),
             ),
+
+            // category filter chips
+
+            SizedBox(
+              height: 36,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                itemCount: _categories.length,
+                itemBuilder: (context, index) {
+                  final category = _categories[index];
+                  final isSelected = _searchCategory == category;
+
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selectedCategory = category;
+                        // clear search when switching category
+                        _searchController.clear();
+                        productProvider.updateSearchQuery('');
+                      });
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(right: 8),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected ? amber : Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        'category',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600
+                            color: isSelected ? Colors.white : Colors.black54,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+
+            SizedBox(height: 16,)
+            // Results Count
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                '${displayProducts.length} Products found',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            SizedBox(height: 12),
+
+            // Product Grid
+
+            Expanded(
+              child: displayProducts.isEmpty ? _buildEmptyState() : GridView.builder(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  childAspectRatio: 0.72,
+                ),
+                itemCount: displayProducts.length,
+                itemBuilder: (context, index) {
+                  final product = displayProducts[index];
+                  return ProductCard(product: product);
+                }
+              ),
+            ),
           ],
-        )
+        ),
       ),
     );
   }
+
+  // EMPTY STATE WIDGET
+
+Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.search_off_rounded,
+            size: 80,
+            color: Colors.grey.shade300,
+          ),
+          SizedBox(height: 16),
+          Text(
+              'No Product Found',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black54,
+            ),
+          ),
+          SizedBox(height: 8),
+
+          Text(
+              'Try searching with different keywords',
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey,
+          ),
+          ),
+        ],
+      ),
+    );
+}
 }
