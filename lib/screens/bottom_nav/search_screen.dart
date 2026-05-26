@@ -21,8 +21,8 @@ class _SearchScreenState extends State<SearchScreen> {
     'Beauty',
     'Gadgets',
     'Accessories',
-    'Books'
-    'Utensils'
+    'Books',
+    'Utensils',
   ];
 
   @override
@@ -69,8 +69,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: TextField(
                           controller: _searchController,
                           autofocus: false,
-                          onChanged: () {
-                            // Update search in provider
+                          onChanged: (value) { // Added 'value' parameter here
                             productProvider.updateSearchQuery(value);
                             setState(() {});
                           },
@@ -111,16 +110,17 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
 
             // category filter chips
-
             SizedBox(
               height: 36,
-              child: ListView(
+              child: ListView.builder( // Changed to ListView.builder
                 scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 itemCount: _categories.length,
                 itemBuilder: (context, index) {
                   final category = _categories[index];
-                  final isSelected = _searchCategory == category;
+                  // Fixed variable name to _selectedCategory
+                  final isSelected = _selectedCategory == category;
+
 
                   return GestureDetector(
                     onTap: () {
@@ -146,7 +146,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600
-                            color: isSelected ? Colors.white : Colors.black54,
+                          color: isSelected ? Colors.white : Colors.black54,
                         ),
                       ),
                     ),
