@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shophive/models/product_model.dart';
+import 'package:shophive/screens/product_detail_screen.dart';
 
 class ProductCard extends StatelessWidget {
   final ProductModel product;

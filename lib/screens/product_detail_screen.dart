@@ -166,7 +166,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             children: List.generate(5, (index) {
         return Icon(
           index < widget.product.rating.floor()
-              ? Icons.start
+              ? Icons.star
               : index < widget.product.rating
               ? Icons.star_half
               : Icons.star_border,
@@ -263,6 +263,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ),
                           ),
                         SizedBox(width: 16),
+      // Add this quantity number
+                        Text(
+                          _quantity.toString(),
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: deepBrown,
+                          ),
+                        ),
       // Plus Button
       GestureDetector(
         onTap: () {
@@ -293,7 +302,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              '{widget.product.name} added to cart!',
+                              '${widget.product.name} added to cart!',
                             ),
                             backgroundColor: deepBrown,
                             behavior: SnackBarBehavior.floating,

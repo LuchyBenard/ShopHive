@@ -21,8 +21,8 @@ class _SearchScreenState extends State<SearchScreen> {
     'Beauty',
     'Gadgets',
     'Accessories',
-    'Books',
-    'Utensils',
+    'Books', // Added comma
+    'Utensils'
   ];
 
   @override
@@ -30,20 +30,19 @@ class _SearchScreenState extends State<SearchScreen> {
     _searchController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProductProvider>(context);
     const deepBrown = Color(0xFF3E1C00);
     const amber = Color(0xFFF4A300);
 
-    // If user typed something → use search results
-    // If category selected → filter by category
-    // Otherwise → show all products
     final displayProducts = _searchController.text.isNotEmpty
         ? productProvider.searchResults
         : _selectedCategory == 'All'
         ? productProvider.products
         : productProvider.getByCategory(_selectedCategory);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -51,65 +50,63 @@ class _SearchScreenState extends State<SearchScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Top Bar
-
             Padding(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 vertical: 16,
                 horizontal: 12,
               ),
               child: Row(
                 children: [
-                  // Search field
                   Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: TextField(
-                          controller: _searchController,
-                          autofocus: false,
-                          onChanged: (value) { // Added 'value' parameter here
-                            productProvider.updateSearchQuery(value);
-                            setState(() {});
-                          },
-                          decoration: InputDecoration(
-                            hintText: 'Search products...',
-                              hintStyle: TextStyle(
-                                color: Colors.grey.shade500,
-                                fontSize: 14,
-                              ),
-                            prefixIcon: Icon(
-                              Icons.search,
-                              color: Colors.grey.shade500,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: TextField(
+                        controller: _searchController,
+                        autofocus: false,
+                        onChanged: (value) { // Added 'value' parameter here
+                          productProvider.updateSearchQuery(value);
+                          setState(() {});
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Search products...',
+                          hintStyle: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontSize: 14,
+                          ),
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: Colors.grey.shade500,
+                          ),
+                          suffixIcon: _searchController.text.isNotEmpty
+                              ? IconButton(
+                            icon: const Icon(
+                              Icons.close,
+                              color: Colors.grey,
                             ),
-                            // show a clearer button when users type
-                            suffixIcon: _searchController.text.isNotEmpty? IconButton(
-                              icon: Icon(
-                                Icons.close,
-                                color: Colors.grey,
-                              ),
-                              onPressed: () {
-                                _searchController.clear();
-                                productProvider.updateSearchQuery('');
-                                setState(() {});
-                              },
-                            )
-                                : null,
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 14,
-                            ),
+                            onPressed: () {
+                              _searchController.clear();
+                              productProvider.updateSearchQuery('');
+                              setState(() {});
+                            },
+                          )
+                              : null,
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 14,
                           ),
                         ),
                       ),
+                    ),
                   ),
-                  ],
+                ],
               ),
             ),
 
-            // category filter chips
+            // Category filter chips
             SizedBox(
               height: 36,
               child: ListView.builder( // Changed to ListView.builder
@@ -121,19 +118,17 @@ class _SearchScreenState extends State<SearchScreen> {
                   // Fixed variable name to _selectedCategory
                   final isSelected = _selectedCategory == category;
 
-
                   return GestureDetector(
                     onTap: () {
                       setState(() {
                         _selectedCategory = category;
-                        // clear search when switching category
                         _searchController.clear();
                         productProvider.updateSearchQuery('');
                       });
                     },
                     child: Container(
-                      margin: EdgeInsets.only(right: 8),
-                      padding: EdgeInsets.symmetric(
+                      margin: const EdgeInsets.only(right: 8),
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 8,
                       ),
@@ -142,10 +137,10 @@ class _SearchScreenState extends State<SearchScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        'category',
+                        category, // Use variable category, not string 'category'
                         style: TextStyle(
                           fontSize: 12,
-                          fontWeight: FontWeight.w600
+                          fontWeight: FontWeight.w600, // Added comma here
                           color: isSelected ? Colors.white : Colors.black54,
                         ),
                       ),
@@ -155,28 +150,30 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
 
-            SizedBox(height: 16,)
+            const SizedBox(height: 16), // Fixed trailing comma
+
             // Results Count
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 '${displayProducts.length} Products found',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 13,
                   color: Colors.grey,
                   fontWeight: FontWeight.w500,
                 ),
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
 
             // Product Grid
-
             Expanded(
-              child: displayProducts.isEmpty ? _buildEmptyState() : GridView.builder(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
+              child: displayProducts.isEmpty
+                  ? _buildEmptyState()
+                  : GridView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
                   crossAxisSpacing: 12,
                   mainAxisSpacing: 12,
                   childAspectRatio: 0.72,
@@ -185,7 +182,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 itemBuilder: (context, index) {
                   final product = displayProducts[index];
                   return ProductCard(product: product);
-                }
+                },
               ),
             ),
           ],
@@ -194,9 +191,7 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  // EMPTY STATE WIDGET
-
-Widget _buildEmptyState() {
+  Widget _buildEmptyState() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -206,26 +201,25 @@ Widget _buildEmptyState() {
             size: 80,
             color: Colors.grey.shade300,
           ),
-          SizedBox(height: 16),
-          Text(
-              'No Product Found',
+          const SizedBox(height: 16),
+          const Text(
+            'No Product Found',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Colors.black54,
             ),
           ),
-          SizedBox(height: 8),
-
-          Text(
-              'Try searching with different keywords',
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey,
-          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Try searching with different keywords',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey,
+            ),
           ),
         ],
       ),
     );
-}
+  }
 }
