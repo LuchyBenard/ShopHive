@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shophive/models/product_model.dart';
+import 'package:shophive/providers/cart_provider.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final ProductModel product;
@@ -21,6 +23,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget build(BuildContext context) {
     const deepBrown = Color(0xFF3E1C00);
     const amber = Color(0xFFF4A300);
+    Color(0xFFF4A300);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -299,6 +302,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ElevatedButton.icon(
                       onPressed: () {
                         // TODO: Add product to cart
+                        // Actually adds to cart now
+                        cartProvider.addToCart(widget.product, _quantity);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
@@ -328,7 +333,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         size: 18,
                       ),
                       label: Text(
-                        'Add to Cart',
+                        cartProvider.isInCart(widget.product.id)
+                        ? 'Added to Cart' : 'Add to Cart',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
