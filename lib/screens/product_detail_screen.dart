@@ -102,12 +102,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     child: Image.asset(
     widget.product.image,
     width: double.infinity,
-    height: 280,
+    height: 350,
     fit: BoxFit.cover,
     errorBuilder: (context, error, stackTrace) {
     return Container(
     width: double.infinity,
-    height: 280,
+    height: 350,
     decoration: BoxDecoration(
     color: Colors.grey.shade200,
     borderRadius: BorderRadius.circular(16),

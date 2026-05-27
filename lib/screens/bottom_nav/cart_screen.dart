@@ -5,6 +5,18 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    const deepBrown = Color(0xFF3E1C00);
+    const amber = Color(0xFFF4A300);
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+
+          ),
+        ),
+      ),
+    );
   }
 }
