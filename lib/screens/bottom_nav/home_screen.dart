@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shophive/providers/product_provider.dart';
+import 'package:shophive/providers/cart_provider.dart';
 import 'package:shophive/widgets/product_card.dart';
 
 class HomeScreen extends StatefulWidget {       // ← changed to StatefulWidget
