@@ -17,7 +17,7 @@ int get cartCount => _cartItems.length;
 double get totalPrice {
   return _cartItems.fold(
     0,
-      (sum, item) => + item.totalPrice,
+      (sum, item) => sum + item.totalPrice,
   );
 }
 
@@ -72,7 +72,7 @@ void decreaseQuantity(String productId) {
       (item) => item.product.id == productId,
   );
   if (index != -1) {
-    if (_cartItems.[index].quantity > 1) {
+    if (_cartItems[index].quantity > 1) {
       // decrease if more than 1
       _cartItems[index].quantity--;
     } else {

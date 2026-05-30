@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shophive/models/cart_model.dart';
 import 'package:shophive/providers/cart_provider.dart';
+import 'package:shophive/widgets/cart_item.dart';
+import 'package:shophive/widgets/empty_cart_view.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -207,25 +209,36 @@ class _CartScreenState extends State<CartScreen> {
             // CART ITEMS LIST
             Expanded(
               child: cartProvider.cartItems.isEmpty
-                  ? _buildEmptyCart()
+                  ? EmptyCartView()
                   : ListView.builder(
                 padding: const EdgeInsets.all(16),
                 itemCount: cartProvider.cartItems.length,
                 itemBuilder: (context, index) {
                   final item = cartProvider.cartItems[index];
-                  final isSelected =
-                  _selectedIds.contains(item.product.id);
-                  return _buildCartItem(
-                    item,
-                    isSelected,
-                    cartProvider,
-                    deepBrown,
-                    amber,
+                  return CartItem(
+                      item: item,
+                      isSelected: _selectedIds.contains(item.product.id),
+                      onIncrement: () => cartProvider.increaseQuantity(item.product.id),
+                      onDecrement: () => cartProvider.decreaseQuantity(item.product.id),
+                      onToggle: () {
+                        setState(() {
+                          if (_selectedIds.contains(item.product.id)) {
+                            _selectedIds.remove(item.product.id);
+                          } else {
+                            _selectedIds.add(item.product.id);
+                          }
+                        });
+                      },
+                      onDelete: () {
+                        setState(() {
+                          _selectedIds.remove(item.product.id);
+                          cartProvider.removeFromCart(item.product.id);
+                        });
+                      }
                   );
                 },
               ),
             ),
-
 
             // TOTAL + CHECKOUT
             if (cartProvider.cartItems.isNotEmpty)
@@ -296,7 +309,7 @@ class _CartScreenState extends State<CartScreen> {
                         onPressed: selectedCount > 0 ? () {} : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: deepBrown,
-                          foregroundColor: Colors.white
+                          foregroundColor: Colors.white,
                           disabledBackgroundColor: Colors.grey.shade300,
                           padding: EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
@@ -322,238 +335,4 @@ class _CartScreenState extends State<CartScreen> {
       ),
     );
   }
-
-  // Cart Item Widget
-  Widget _buildCartItem(
-      CartModel item,
-      bool isSelected,
-      CartProvider cartProvider,
-      Color deepBrown,
-      Color amber,
-      ) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 12),
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isSelected
-              ? deepBrown.withOpacity(0, 3) : Colors.grey.shade200,
-          width: isSelected ? 1.5 : 1,
-        ),
-      ),
-      child: Row(
-        children: [
-          // checkbox
-          GestureDetector(
-            onTap: () => _toggleItem(item.product.id, cartProvider),
-            child: Container(
-              width: 22,
-              height: 22,
-              decoration: BoxDecoration(
-                color: isSelected ? deepBrown : Colors.transparent,
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(
-                  color: isSelected ? deepBrown : Colors.grey,
-                  width: 2,
-                ),
-              ),
-              child: isSelected
-                  ? Icon(
-                Icons.check,
-                size: 14,
-                color: Colors.white,
-              )
-                  : null,
-            ),
-          ),
-          SizedBox(width: 12),
-
-          // PRODUCT IMAGE
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.asset(
-              item.product.image,
-              width: 80,
-              height: 80,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    Icons.shopping_bag_outlined,
-                    color: Colors.grey,
-                  ),
-                );
-              },
-            ),
-          ),
-          SizedBox(width: 12),
-          //PRODUCT INFO
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-// Name + delete icon
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        item.product.name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ),
-
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedIds.remove(item.product.id);
-                          cartProvider.removeFromCart(item.product.id);
-                        });
-                      },
-                      child: Icon(
-                        Icons.delete_outline,
-                        color: Colors.red,
-                        size: 20,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 4),
-                // Category
-                Text(
-                  item.product.category,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey,
-                  ),
-                ),
-                SizedBox(height: 8),
-
-                // price + selector
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-// price
-                    Text(
-                      '\$${item.totalPrice.toStringAsFixed(2)}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF3E1C00),
-                      ),
-                    ),
-
-                    // Quantity Selector
-                    Row(
-                      children: [
-                        // Minus Button
-                        GestureDetector(
-                          onTap: () {
-                            cartProvider.decreaseQuantity(item.product.id);
-                          },
-                          child: Container(
-                            width: 28,
-                            height: 28,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Icon(
-                              Icons.remove,
-                              size: 14,
-                              color: deepBrown,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 8),
-
-                        // Quantity Number
-                        Text(
-                          item.quantity.toString(),
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                          ),
-                        ),
-                        SizedBox(width: 8),
-
-                        // Plus Button
-                        GestureDetector(
-                          onTap: () {
-                            cartProvider.increaseQuantity(item.product.id);
-                          },
-                          child: Container(
-                            width: 28,
-                            height: 28,
-                            decoration: BoxDecoration(
-                              color: amber,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Icon(
-                              Icons.add,
-                              size: 14,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Empty cart widget
-  Widget _buildEmptyCart() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.shopping_cart_outlined,
-            size: 100,
-            color: Colors.grey,
-          ),
-          SizedBox(height: 16),
-          Text(
-            'Your cart is empty',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.black54,
-            ),
-    ),
-        SizedBox(height: 8),
-        Text(
-          'Add items to your cart to get started',
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey,
-          ),
-        ),
-      ],
-            ),
-          );
-  }
-  }
+}

@@ -4,8 +4,15 @@ import 'package:shophive/providers/product_provider.dart';
 import 'package:shophive/providers/cart_provider.dart';
 import 'package:shophive/widgets/product_card.dart';
 
-class HomeScreen extends StatefulWidget {       // ← changed to StatefulWidget
-  const HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  final VoidCallback? onCartTap;
+  final VoidCallback? onSeeAllTap;
+
+  const HomeScreen({
+    super.key,
+    this.onCartTap,
+    this.onSeeAllTap,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -75,13 +82,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     // Shopping bag now clickable
                     GestureDetector(
                       onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Cart coming soon!'),
-                            behavior: SnackBarBehavior.floating,
-                          ),
-                        );
-                      },
+                        if (onCartTap != null) {
+                          onCartTap!();
+                        }
+                        },
                       child: Stack(
                         children: [
                           const Icon(
@@ -308,7 +312,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () => widget.onSeeAllTap.call(),
                       child: const Text(
                         'See All',
                         style: TextStyle(
@@ -373,7 +377,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 20),
 
 
-              // RECOMMENDED FOR YOU ← Fix 2
+              // RECOMMENDED FOR YOU
 
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
@@ -388,7 +392,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 12),
 
-              // ← Fix 2: Vertical grid instead of horizontal list
+              //  Vertical grid instead of horizontal list
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),

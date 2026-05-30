@@ -6,15 +6,6 @@ import 'package:shophive/screens/bottom_nav/bottom_nav_bar.dart';
 import 'package:shophive/screens/splash_screen.dart';
 import 'package:shophive/providers/cart_provider.dart';
 
-MultiProvider(
-providers: [
-  ChangeNotifierProvider(create: (_) => AuthProvider()),
-ChangeNotifierProvider(create: (_) => ProductProvider()),
-ChangeNotifierProvider(create: (_) => CartProvider()),
-],
-child: MaterialApp(...),
-)
-
 void main() {
   runApp(const ShopHive());
 }
@@ -28,6 +19,7 @@ class ShopHive extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(create: (_) => AuthProvider()),
           ChangeNotifierProvider(create: (_) => ProductProvider()),
+    ChangeNotifierProvider(create: (_) => CartProvider()),
         ],
     child: MaterialApp(
       debugShowCheckedModeBanner: false,

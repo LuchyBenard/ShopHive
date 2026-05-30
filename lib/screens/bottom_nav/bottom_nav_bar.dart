@@ -15,10 +15,15 @@ class _BottomNavBarState extends State<BottomNavBar> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    HomeScreen(),
+    HomeScreen(
+        onCartTap: () => setState(() => _currentIndex = 2),
+      onSeeAllTap: () => setState(() => _currentIndex = 1),
+    ),
     SearchScreen(),
     CartScreen(),
-    ProfileScreen(),
+    ProfileScreen(
+        onHomeTap: () => setState(() => _curentIndex = 0),
+    ),
   ];
 
   @override
